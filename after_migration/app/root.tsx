@@ -7,6 +7,9 @@ import {
   ScrollRestoration,
 } from "react-router";
 
+import Header from "./components/ktl-component/header";
+import Footer from "./components/ktl-component/footer";
+
 import type { Route } from "./+types/root";
 import "./app.css";
 
@@ -42,7 +45,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+  return (
+    <>
+      <Header />
+      <main>
+        <Outlet />
+      </main>
+      <Footer />
+    </>
+  );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

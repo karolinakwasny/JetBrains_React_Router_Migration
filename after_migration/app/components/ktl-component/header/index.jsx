@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import '@jetbrains/kotlin-web-site-ui/dist/header.css';
 
 const Header = (props) => {
   const [GlobalHeader, setGlobalHeader] = useState(null);
