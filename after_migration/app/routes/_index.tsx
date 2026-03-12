@@ -1,24 +1,26 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import '@rescui/typography/lib/font-jb-sans-auto.css';
 
-import '../styles/global.scss';
 
 import hljs from 'highlight.js/lib/core';
 import kotlin from 'highlight.js/lib/languages/kotlin';
 import 'highlight.js/styles/github.css';
-hljs.registerLanguage('kotlin', kotlin);
 
 import {ThemeProvider} from '@rescui/ui-contexts';
 
-import {HeaderSection} from './header-section';
-import {LatestFromKotlinSection} from './latest-from-kotlin-section';
-import {WhyKotlinSection} from './why-kotlin-section';
-import {UsageSection} from './usage-section';
-import {StartSection} from './start-section';
+import {HeaderSection} from '../components/index/header-section';
+import {LatestFromKotlinSection} from '../components/index/latest-from-kotlin-section';
+import {WhyKotlinSection} from '../components/index/why-kotlin-section';
+import {UsageSection} from '../components/index/usage-section';
+import {StartSection} from '../components/index/start-section';
 
-import '../index/index.scss';
-import '../../../css/grid.scss'
+import '../components/index/index.scss';
+import '../styles/grid.scss';
+import '../styles/global.scss';
+
+if (!hljs.getLanguage('kotlin')) {
+  hljs.registerLanguage('kotlin', kotlin);
+}
 
 function OverviewPageContent() {
     return <div className="overview-page">
@@ -30,12 +32,10 @@ function OverviewPageContent() {
     </div>
 }
 
-export const OverviewPage = () => (
+export default function IndexRoute() {
+  return (
     <ThemeProvider theme="dark">
-        <OverviewPageContent/>
+      <OverviewPageContent />
     </ThemeProvider>
-)
-
-const container = document.getElementById('react-app')
-
-ReactDOM.render(<OverviewPage/>, container);
+  );
+}
