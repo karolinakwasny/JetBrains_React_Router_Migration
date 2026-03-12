@@ -5,15 +5,34 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from "react-router";
 
 import Header from "./components/ktl-component/header";
 import Footer from "./components/ktl-component/footer";
 
 import type { Route } from "./+types/root";
-import "./app.css";
+import "./styles/global.scss";
+import "./styles/base.scss";
+import "./styles/grid.scss";
+import { ThemeProvider } from "@rescui/ui-contexts";
+
+export async function loader() {
+  return {
+    restyled: "v2",
+    headerDropdownTheme: "dark",
+    ogImage: "/assets/images/open-graph/general.png",
+  };
+}
+
+export const meta: Route.MetaFunction = () => [
+  { title: "Kotlin Programming Language" },
+  { name: "description", content: "Kotlin website" },
+];
 
 export const links: Route.LinksFunction = () => [
+  { rel: "icon", href: "assets/images/favicon.ico", type: "image/x-icon" },
+  { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {
     rel: "preconnect",
@@ -27,15 +46,37 @@ export const links: Route.LinksFunction = () => [
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  const data = useLoaderData() as { restyled?: string } | undefined;
+
+  const htmlClass = data?.restyled
+    ? `page_restyled_${data.restyled}`
+    : "page-old-styled";
+
+  const viewportWidth = data?.restyled === "v2" ? "device-width" : "1000";
+
   return (
-    <html lang="en">
+    <html lang="en" className={htmlClass}>
       <head>
         <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta
+          name="viewport"
+          content={`width=${viewportWidth}, initial-scale=1`}
+        />
+        <meta httpEquiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
         <Meta />
         <Links />
       </head>
-      <body>
+      <body className="page_js_yes">
+        <noscript>
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-5P98"
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          ></iframe>
+        </noscript>
+
         {children}
         <ScrollRestoration />
         <Scripts />
@@ -45,14 +86,23 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  const data = useLoaderData() as { headerDropdownTheme?: string } | undefined;
+
   return (
-    <>
-      <Header />
-      <main>
+    <div className="global-layout">
+      <Header
+        productWebUrl="https://github.com/JetBrains/kotlin/releases/tag/v1.6.20"
+        dropdownTheme={data?.headerDropdownTheme || "dark"}
+        hasSearch={false}
+      />
+
+      <main className="g-layout global-content">
         <Outlet />
       </main>
-      <Footer />
-    </>
+      <ThemeProvider theme="dark">
+        <Footer />
+      </ThemeProvider>
+    </div>
   );
 }
 
